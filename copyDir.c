@@ -6,12 +6,28 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+
+void trimpathname(char *path1, char *path2){
+    size_t len1 = strlen(path1);
+    size_t len2 = strlen(path2);
+    int i=0,j=len2;
+    for(i=len1-1;i>=0;i--){
+        if(*(path1+i)=='/')
+            break;
+    }
+    for(;i<len1;i++,j++)
+        *(path2+j)=*(path1+i);
+    *(path2+j)='\0';
+}
 int copy_block(char *path1, char *path2){
     char block[1024];
     int in, out;
     int nread;
     in = open(path1,O_RDONLY);
     out = open(path2, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
+    struct stat tmp;
+    stat(path1, &tmp);
+    chmod(path2, tmp.st_mode);
     while((nread=read(in, block, sizeof(block)))>0)
         write(out, block, nread);
     return 0;
@@ -59,8 +75,12 @@ int copy_directory(char *path1, char *path2){
                 printf("%s\n",buffer2);
                 if(!stat(buffer1, &statbuffer)){
                     if(S_ISDIR(statbuffer.st_mode)){
-                        if(make_directory(buffer2))
+                        if(make_directory(buffer2)){
+                            struct stat tmp;
                             r2 = copy_directory(buffer1,buffer2);
+                            stat(buffer1, &tmp);
+                            chmod(buffer2, tmp.st_mode);
+                        }
                         else
                             printf("Error in making directory\n");
                     }
@@ -78,6 +98,11 @@ int copy_directory(char *path1, char *path2){
 }
 
 int main(){
-    copy_directory("/home/neil/Downloads/ex-050325", "/home/neil/Downloads/hello/ilove");
+    char path1[100]= "/home/neil/Downloads/ex-050325";
+    char path2 [100]= "/home/neil/Downloads/hello/ilove";
+    trimpathname(path1,path2);
+    printf("%s\n", path2);
+    make_directory(path2);
+    copy_directory(path1, path2);
     exit(0);
 }
