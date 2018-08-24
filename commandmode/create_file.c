@@ -7,7 +7,8 @@
 
 #include "create_file.h"
 
-void create_file(char *filename, char *path_for_file){
+int create_file(char *filename, char *path_for_file){
     strcat(path_for_file, "/");
     strcat(path_for_file,filename);
+    return open(path_for_file, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
 }
