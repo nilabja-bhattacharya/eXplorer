@@ -28,7 +28,9 @@
 int main(){
     //char filename1[500] = "/home/neil/Documents/OS_Project";
     char filename2[500] = "/home/neil/Downloads/ex-050325";
-    char filename3[500] = "/home/neil/Downloads/hello";
-    copy_directory(filename2,filename3);
+    //char filename3[500] = "/home/neil/Downloads/hello";
+    //freopen("newfile.txt","w", stdout);
+    snapshot_directory(filename2,filename2);
+    //fclose(stdout);
     return 0;
 }
