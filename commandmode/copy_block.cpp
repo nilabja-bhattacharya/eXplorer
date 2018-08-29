@@ -7,6 +7,8 @@ This file implements the copy of file in block sizes of 4096 from source file to
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <iostream>
+using namespace std;
 
 #include "copy_block.h"
 #include "trim_pathname.h"

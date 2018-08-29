@@ -4,6 +4,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <iostream>
+using namespace std;
 
 #include "trim_pathname.h"
 

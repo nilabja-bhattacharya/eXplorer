@@ -7,6 +7,8 @@ This file implements the move of file in block sizes of 4096 from source folder 
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <iostream>
+using namespace std;
 
 #include "copy_block.h"
 #include "move_file.h"

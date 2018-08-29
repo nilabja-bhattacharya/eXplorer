@@ -3,6 +3,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <iostream>
+using namespace std;
 
 #include "rename_file.h"
 

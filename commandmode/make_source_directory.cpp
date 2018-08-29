@@ -5,6 +5,8 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <iostream>
+using namespace std;
 
 #include "make_directory.h"
 #include "trim_pathname.h"

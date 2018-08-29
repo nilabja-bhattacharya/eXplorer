@@ -9,8 +9,24 @@
 #include <string>
 using namespace std;
 
-#include "commandmode/list_directory.h"
+#include "commandmode/snapshot_directory.h"
+#include "commandmode/copy_block.h"
+#include "commandmode/create_file.h"
+#include "commandmode/create_directory.h"
+#include "commandmode/copy_files_inside_directory.h"
+#include "commandmode/copy_directory.h" 
+#include "commandmode/delete_directory.h" 
+#include "commandmode/delete_file.h" 
 #include "commandmode/goto_directory.h"
+#include "commandmode/list_directory.h"
+#include "commandmode/make_directory.h"
+#include "commandmode/make_source_directory.h"
+#include "commandmode/move_directory.h"
+#include "commandmode/move_file.h"
+#include "commandmode/rename_file.h"
+#include "commandmode/search_file_or_directory.h"
+#include "commandmode/snapshot_directory.h" 
+#include "commandmode/trim_pathname.h"
 
 #define cursorupward(x) printf("\033[%dA", (x))
 #define cursordownward(x) printf("\033[%dB", (x))
@@ -122,9 +138,10 @@ vector<string> split(string phrase, string delimiter){
         list.push_back(token);
         s.erase(0, pos + delimiter.length());
     }
+    list.push_back(s);
     return list;
 }
-void commandmode(){
+void commandmode(char *root){
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int num_of_row = w.ws_row;
@@ -140,11 +157,31 @@ void commandmode(){
         string str;
         getline(cin, str);
         vector<string> command;
-        if(str.size()>1 && str[0] != KEY_ESCAPE){
+        if(str[0] != KEY_ESCAPE){
             command = split(str, " ");
             if(command[0] == "copy"){
-                for(int i=1;i<command.size();i++){
-
+                string complete_dest;
+                string dest = command[command.size()-1];
+                //cout<<dest[0]<<endl;;
+                if(dest[0]=='~'){
+                    complete_dest = root + dest.substr(1);
+                    //cout<<complete_dest;
+                }
+                else
+                    complete_dest = dest;
+                for(int i=1;i<command.size()-1;i++){
+                    if(command[i].find('.')){
+                        string str1 = root;
+                        string str2 = complete_dest;
+                        str1.append("/");
+                        str1 = str1 +  command[i];
+                        char cstrpath[1000];
+                        strcpy(cstrpath, str1.c_str());
+                         char cstrdest[1000];
+                        strcpy(cstrdest, str2.c_str());
+                        //cout<<complete_path<<endl;
+                        copy_block(cstrpath,cstrdest);
+                    }
                 }
             }
             else if(command[0] == "move"){
@@ -196,7 +233,7 @@ int main(void)
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int num_of_row = w.ws_row;
-    for(int i=0;i<lst.size();i++)
+    for(int i=0;i<num_of_row-1 && i<lst.size();i++)
         cout<<lst[i].display<<" "<<lst[i].path<<"\n";
     stack_prev.push(root);
     //cout<<stack_prev.top().path<<" "<<endl;
@@ -248,7 +285,7 @@ int main(void)
             }
         }
         else if (c == KEY_UP){
-            //if(row>0)
+            if(row>0)
                 row--;
             /*if(row==-1){
                 index--;
@@ -256,7 +293,7 @@ int main(void)
             cursorupward(1);
         } 
         else if(c == KEY_DOWN) {
-            //if(row<num_of_row-1)
+            if(row<num_of_row-1)
                 row++;
             /*if(row==num_of_row-){
                 index++;
@@ -328,7 +365,7 @@ int main(void)
         } 
         if(c==':'){
             cout<<"entered command mode";
-            commandmode();
+            commandmode(path_name);
             printf("\033[H\033[J");
             printf("\033[3J");
             for(int i=0;i<num_of_row-1 && i<lst.size();i++)
