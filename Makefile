@@ -4,11 +4,11 @@ CFLAGS = -c -Wall
 
 all: eXplorer
 
-eXplorer: keyb.o copy_block.o make_directory.o create_file.o create_directory.o copy_files_inside_directory.o copy_directory.o delete_directory.o delete_file.o goto_directory.o list_directory.o make_source_directory.o move_directory.o move_file.o rename_file.o search_file_or_directory.o snapshot_directory.o trim_pathname.o 
-			$(CC) keyb.o copy_block.o create_file.o make_directory.o create_directory.o copy_files_inside_directory.o copy_directory.o delete_directory.o delete_file.o goto_directory.o list_directory.o make_source_directory.o move_directory.o move_file.o rename_file.o search_file_or_directory.o snapshot_directory.o trim_pathname.o -o eXplorer
+eXplorer: eXplorer.o copy_block.o make_directory.o create_file.o create_directory.o copy_files_inside_directory.o copy_directory.o delete_directory.o delete_file.o goto_directory.o list_directory.o make_source_directory.o move_directory.o move_file.o rename_file.o search_file_or_directory.o snapshot_directory.o trim_pathname.o 
+			$(CC) eXplorer.o copy_block.o create_file.o make_directory.o create_directory.o copy_files_inside_directory.o copy_directory.o delete_directory.o delete_file.o goto_directory.o list_directory.o make_source_directory.o move_directory.o move_file.o rename_file.o search_file_or_directory.o snapshot_directory.o trim_pathname.o -o eXplorer
 
-keyb.o: keyb.cpp
-		$(CC) $(CFLAGS) keyb.cpp
+eXplorer.o: eXplorer.cpp
+		$(CC) $(CFLAGS) eXplorer.cpp
 
 copy_block.o: commandmode/copy_block.cpp
 		$(CC) $(CFLAGS) commandmode/copy_block.cpp
