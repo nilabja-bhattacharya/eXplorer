@@ -32,10 +32,10 @@ void snapshot_directory(char *path_name_for_directory_to_be_traversed, char *roo
         if(S_ISDIR(statbuf.st_mode)){
             if(strcmp(".", entry->d_name) == 0 || strcmp("..", entry->d_name) == 0)
                 continue;
-            printf("%15s ",entry->d_name);
+            printf("%10s\t ",entry->d_name);
         }
         else
-            printf("%15s ",entry->d_name);
+            printf("%10s\t ",entry->d_name);
     }
     printf("\n \n");
     while((entry=readdir(pointer_to_path_name_for_directory_to_be_traversed))!=NULL){

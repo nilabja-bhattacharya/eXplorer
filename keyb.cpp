@@ -150,6 +150,8 @@ void commandmode(char *root){
     gotoxy(num_of_row,0);
     close_keyboard();
     int c;
+    char cstrpath[1000];
+    char cstrdest[1000];
     while(1){
         printf("\033[H\033[J");
         printf("\033[3J");
@@ -170,46 +172,179 @@ void commandmode(char *root){
                 else
                     complete_dest = dest;
                 for(int i=1;i<command.size()-1;i++){
-                    if(command[i].find('.')){
+                    if(command[i].find('.')!=string::npos){
                         string str1 = root;
                         string str2 = complete_dest;
                         str1.append("/");
                         str1 = str1 +  command[i];
-                        char cstrpath[1000];
                         strcpy(cstrpath, str1.c_str());
-                         char cstrdest[1000];
                         strcpy(cstrdest, str2.c_str());
                         //cout<<complete_path<<endl;
                         copy_block(cstrpath,cstrdest);
                     }
+                    else{
+                        //cout<<command[i]<<endl;
+                        string str1 = root;
+                        string str2 = complete_dest;
+                        str1.append("/");
+                        str1 = str1 +  command[i];
+                        strcpy(cstrpath, str1.c_str());
+                        strcpy(cstrdest, str2.c_str());
+                        //cout<<complete_path<<endl;
+                        copy_directory(cstrpath,cstrdest);
+                    }
                 }
             }
             else if(command[0] == "move"){
-
+                string complete_dest;
+                string dest = command[command.size()-1];
+                //cout<<dest[0]<<endl;;
+                if(dest[0]=='~'){
+                    complete_dest = root + dest.substr(1);
+                    //cout<<complete_dest;
+                }
+                else
+                    complete_dest = dest;
+                for(int i=1;i<command.size()-1;i++){
+                    if(command[i].find('.')!=string::npos){
+                        string str1 = root;
+                        string str2 = complete_dest;
+                        str1.append("/");
+                        str1 = str1 +  command[i];
+                        strcpy(cstrpath, str1.c_str());
+                        strcpy(cstrdest, str2.c_str());
+                        //cout<<complete_path<<endl;
+                        move_file(cstrpath,cstrdest);
+                    }
+                    else{
+                        cout<<command[i]<<endl;
+                        string str1 = root;
+                        string str2 = complete_dest;
+                        str1.append("/");
+                        str1 = str1 +  command[i];
+                        strcpy(cstrpath, str1.c_str());
+                        strcpy(cstrdest, str2.c_str());
+                        //cout<<complete_path<<endl;
+                        move_directory(cstrpath,cstrdest);
+                    }
+                }
             }
             else if(command[0] == "rename"){
-
+                string str1 = root;
+                str1.append("/");
+                string str2 = str1 + command[2]; 
+                str1 = str1 +  command[1];
+                strcpy(cstrpath, str1.c_str());
+                strcpy(cstrdest, str2.c_str());
+                rename_file(cstrpath,cstrdest);
             }
             else if(command[0] == "create_file"){
-
+                string complete_dest;
+                string dest = command[command.size()-1];
+                //cout<<dest[0]<<endl;;
+                if(dest[0]=='~')
+                    complete_dest = root + dest.substr(1);
+                    //cout<<complete_dest;
+                else if(dest==".")
+                    complete_dest = root;
+                else
+                    complete_dest = dest;
+                cout<<complete_dest<<endl;
+                for(int i=1;i<command.size()-1;i++){
+                        string str1 = command[i];
+                        strcpy(cstrpath, str1.c_str());
+                        strcpy(cstrdest, complete_dest.c_str());
+                        create_file(cstrpath, cstrdest);
+                        //cout<<cstrpath<<" "<<cstrdest<<endl;
+                }
             }
             else if(command[0] == "create_dir"){
-
+                string complete_dest;
+                string dest = command[command.size()-1];
+                //cout<<dest[0]<<endl;;
+                if(dest[0]=='~')
+                    complete_dest = root + dest.substr(1);
+                    //cout<<complete_dest;
+                else if(dest==".")
+                    complete_dest = root;
+                else
+                    complete_dest = dest;
+                for(int i=1;i<command.size()-1;i++){
+                        string str1 = command[i];
+                        strcpy(cstrpath, str1.c_str());
+                        strcpy(cstrdest, complete_dest.c_str());
+                        //cout<<complete_dest<<endl;
+                        create_directory(cstrpath, cstrdest);
+                        //cout<<cstrpath<<" "<<cstrdest<<endl;
+                }
             }
             else if(command[0] == "delete_file"){
-
+                for(int i=1;i<command.size();i++){
+                    string str1 = root;
+                    if(command[i][0]=='~')
+                        str1 = str1 + command[i].substr(1);
+                    else{
+                        str1.append("/");
+                        str1 = str1 + command[i];
+                    }
+                    strcpy(cstrpath, str1.c_str());
+                    //cout<<complete_dest<<endl;
+                    delete_file(cstrpath);
+                    //cout<<cstrpath;//<<" "<<cstrdest<<endl;
+                }
             }
             else if(command[0] == "delete_dir"){
-
+                for(int i=1;i<command.size();i++){
+                    string str1 = root;
+                    if(command[i][0]=='~')
+                        str1 = str1 + command[i].substr(1);
+                    else{
+                        str1.append("/");
+                        str1 = str1 + command[i];
+                    }
+                    strcpy(cstrpath, str1.c_str());
+                    //cout<<complete_dest<<endl;
+                    delete_directory(cstrpath);
+                    //cout<<cstrpath;//<<" "<<cstrdest<<endl;
+                }
             }
             else if(command[0] == "goto"){
-
+                
             }
             else if(command[0] == "search"){
-
+                string str1 = root;
+                string str2 = command[1];
+                strcpy(cstrpath, str1.c_str());
+                strcpy(cstrdest, str2.c_str());
+                printf("\033[H\033[J");
+                printf("\033[3J");
+                search_file_or_directory(cstrpath,cstrdest,cstrpath);
+                gotoxy(0,0);
+                sleep(10);
             }
             else if(command[0] == "snapshot"){
-                
+                string str1 = root;
+                string str2;
+                str1.append("/");
+                str2 = str1;
+                str1 = str1 +  command[1];
+                str2 = str2 + command[2];
+                strcpy(cstrpath, str1.c_str());
+                strcpy(cstrdest, str2.c_str());
+                freopen(cstrdest,"w", stdout);
+                snapshot_directory(cstrpath,cstrpath);
+                fclose(stdout);
+                fflush(stdin);
+                fflush(stdout);
+                freopen ("/dev/tty", "a", stdout);
+                fflush(stdout);
+                cout.clear();
+                printf("\033[H\033[J");
+                printf("\033[3J");
+                snapshot_directory(cstrpath,cstrpath);
+                gotoxy(0,0);
+                sleep(10);
+                //stdout = fdopen(1, "w");
             }
         }
         else
@@ -366,10 +501,14 @@ int main(void)
         if(c==':'){
             cout<<"entered command mode";
             commandmode(path_name);
-            printf("\033[H\033[J");
-            printf("\033[3J");
+            cout<<"\033[H\033[J";
+            cout<<"\033[3J";
+            fflush(stdout);
+            cout.clear();
+            lst = list_directory(path_name);
             for(int i=0;i<num_of_row-1 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
+
             gotoxy(0,0);
             row = 0;
         }

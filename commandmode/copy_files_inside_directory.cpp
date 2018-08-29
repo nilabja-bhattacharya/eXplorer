@@ -28,16 +28,16 @@ int copy_files_inside_directory(char *path_name_for_directory_to_be_copied, char
         return_status = 0;
         while(!return_status && (pointer_to_files_and_folder=readdir(pointer_path_for_directory_to_be_copied))){
             int return_status_of_files_inside_folder = -1;
-            char *buffer1;
-            char *buffer2;
+            char buffer1[1000];
+            char buffer2[1000];
             size_t length_of_pointer_to_file_or_folder;
             size_t length_of_pointer_to_new_file_or_directory;
             if(!strcmp(".",pointer_to_files_and_folder->d_name) || !strcmp("..", pointer_to_files_and_folder->d_name))
                 continue;
             length_of_pointer_to_file_or_folder = path_length_for_path_name_for_directory_to_be_copied + strlen(pointer_to_files_and_folder->d_name) + 2;
             length_of_pointer_to_new_file_or_directory = path_length_path_to_new_directory + strlen(pointer_to_files_and_folder->d_name) + 2;
-            buffer1 = (char *)malloc(length_of_pointer_to_file_or_folder);
-            buffer2 = (char *)malloc(length_of_pointer_to_new_file_or_directory);
+            //buffer1 = (char *)malloc(length_of_pointer_to_file_or_folder);
+            //buffer2 = (char *)malloc(length_of_pointer_to_new_file_or_directory);
             if(buffer1 && buffer2){
                 struct stat statbuffer;
                 snprintf(buffer1, length_of_pointer_to_file_or_folder, "%s/%s", path_name_for_directory_to_be_copied, pointer_to_files_and_folder->d_name);
