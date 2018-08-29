@@ -141,7 +141,7 @@ vector<string> split(string phrase, string delimiter){
     list.push_back(s);
     return list;
 }
-void commandmode(char *root){
+string commandmode(char *root, char *root_dir){
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int num_of_row = w.ws_row;
@@ -309,7 +309,14 @@ void commandmode(char *root){
                 }
             }
             else if(command[0] == "goto"){
-                
+                if(command[1]=="/"){
+                    return root_dir;
+                }
+                string str1 = root_dir;
+                str1.append("/");
+                str1 = str1 + command[1];
+                strcpy(cstrpath, command[1].c_str());
+                return str1;
             }
             else if(command[0] == "search"){
                 string str1 = root;
@@ -350,6 +357,7 @@ void commandmode(char *root){
         else
             break;
     }
+    return root;
 }
 
 int main(void)
@@ -368,7 +376,7 @@ int main(void)
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int num_of_row = w.ws_row;
-    for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+    for(int i=0;i<num_of_row-2 && i<lst.size();i++)
         cout<<lst[i].display<<" "<<lst[i].path<<"\n";
     stack_prev.push(root);
     //cout<<stack_prev.top().path<<" "<<endl;
@@ -396,7 +404,7 @@ int main(void)
                 //sort(lst.begin(),lst.end(),compare_names);
                 printf("\033[H\033[J");
                 printf("\033[3J");
-                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                for(int i=0;i<num_of_row-2 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
                 gotoxy(0,0);
                 row=0;
@@ -413,10 +421,18 @@ int main(void)
                     stack_next.pop();
                 lst = list_directory(path_name);
                 //sort(lst.begin(),lst.end(),compare_names);
-                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                for(int i=0;i<num_of_row-2 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
                 gotoxy(0,0);
                 row=0;
+            }
+            else{
+                printf("\033[H\033[J");
+                printf("\033[3J");
+                sleep(1);
+                for(int i=0;i<num_of_row-2 && i<lst.size();i++)
+                    cout<<lst[i].display<<" "<<lst[i].path<<"\n";
+                gotoxy(row+1,0);
             }
         }
         else if (c == KEY_UP){
@@ -445,7 +461,7 @@ int main(void)
                 lst.clear();
                 lst = list_directory(path_name);
                 //sort(lst.begin(),lst.end(),compare_names);
-                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                for(int i=0;i<num_of_row-2 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
                 gotoxy(0,0);
                 row=0;
@@ -461,7 +477,7 @@ int main(void)
                 lst.clear();
                 lst = list_directory(path_name);
                 //sort(lst.begin(),lst.end(),compare_names);
-                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                for(int i=0;i<num_of_row-2 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
                 gotoxy(0,0);
                 row=0;
@@ -489,7 +505,7 @@ int main(void)
                 stack_prev.push(path);
                 lst = list_directory(path_name);
                 //sort(lst.begin(),lst.end(),compare_names);
-                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                for(int i=0;i<num_of_row-2 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
                 gotoxy(0,0);
                 row=0;
@@ -500,13 +516,17 @@ int main(void)
         } 
         if(c==':'){
             cout<<"entered command mode";
-            commandmode(path_name);
+            string str1 = commandmode(path_name, root);
             cout<<"\033[H\033[J";
             cout<<"\033[3J";
             fflush(stdout);
             cout.clear();
+            while(!stack_next.empty())
+                stack_next.pop();
+            stack_prev.push(str1);
+            strcpy(path_name,str1.c_str());
             lst = list_directory(path_name);
-            for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+            for(int i=0;i<num_of_row-2 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
 
             gotoxy(0,0);
@@ -519,7 +539,7 @@ int main(void)
             stack_prev.push(path);
             lst = list_directory(path_name);
             //sort(lst.begin(),lst.end(),compare_names);
-            for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+            for(int i=0;i<num_of_row-2 && i<lst.size();i++)
                 cout<<lst[i].display<<" "<<lst[i].path<<"\n";
             gotoxy(0,0);
             row=0;
