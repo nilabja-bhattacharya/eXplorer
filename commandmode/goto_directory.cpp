@@ -17,7 +17,7 @@ int goto_directory(char *path_name_for_current_directory, char *directory_name){
     struct stat statbuf;
 
     if((pointer_to_path_name_current_directory = opendir(path_name_for_current_directory)) == NULL){
-        fprintf(stderr, "cannot open directory: %s\n", path_name_for_current_directory);
+        //fprintf(stderr, "cannot open directory: %s\n", path_name_for_current_directory);
         return 0;
     }
     chdir(path_name_for_current_directory);
@@ -40,8 +40,13 @@ int goto_directory(char *path_name_for_current_directory, char *directory_name){
         else{
             if(!strcmp(directory_name, entry->d_name)){
                 char *s=(char * )malloc(sizeof(buffer) + 100);
-                snprintf(s, sizeof(buffer)+100, "%s %s", "xdg-open", buffer);
-                system(s);
+                //snprintf(s, sizeof(buffer)+100, "%s %s", "xdg-open", buffer);
+                int pid = fork();
+                if (pid == 0) {
+                    execl("/usr/bin/xdg-open", "xdg-open", buffer, (char *)0);
+                    exit(1);
+                }
+                //system(s);
                 closedir(pointer_to_path_name_current_directory);
                 return 2;
             }
