@@ -10,6 +10,7 @@
 #include <time.h>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 #include "list_directory.h"
@@ -19,6 +20,9 @@ struct file_and_folder{
     char *path;
 };
 
+bool compare_names(struct file_and_folder p1, struct file_and_folder p2){
+    return strcmp(p1.path,p2.path)<0;
+}
 
 void file_or_directory_permission(char *path_name_for_directory, char *file_or_folder_name, char *display){
     struct stat statbuf;
@@ -96,8 +100,8 @@ vector<struct file_and_folder> list_directory(char *path_name_for_directory){
         return lst;
     }
     while((entry=readdir(pointer_to_path_name_for_directory))!=NULL){
-         if(strcmp(".", entry->d_name) == 0 || strcmp("..", entry->d_name) == 0)
-            continue;
+         /*if(strcmp(".", entry->d_name) == 0 || strcmp("..", entry->d_name) == 0)
+            continue;*/
         struct file_and_folder res;
         //res = (struct file_and_folder *)malloc(sizeof(struct file_and_folder));
         char *dsplay = (char *)malloc(100);
@@ -113,5 +117,6 @@ vector<struct file_and_folder> list_directory(char *path_name_for_directory){
         cout<<lst[i].display<<" "<<lst[i].path<<"\n";*/
     chdir("..");
     closedir(pointer_to_path_name_for_directory);
+    sort(lst.begin(),lst.end(),compare_names);
     return lst;
 }

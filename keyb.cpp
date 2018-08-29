@@ -21,6 +21,7 @@ using namespace std;
 #define KEY_DOWN    0x0106
 #define KEY_LEFT    0x0107
 #define KEY_RIGHT   0x0108
+#define BACKSPACE      127
 
 static struct termios term, oterm;
 
@@ -28,6 +29,9 @@ static int getch(void);
 static int kbhit(void);
 static int kbesc(void);
 static int kbget(void);
+void close_keyboard(){
+    tcsetattr(0, TCSANOW, &oterm);
+}
 
 static int getch(void)
 {
@@ -108,6 +112,73 @@ struct file_and_folder{
     char *display;
     char *path;
 };
+vector<string> split(string phrase, string delimiter){
+    vector<string> list;
+    string s = string(phrase);
+    size_t pos = 0;
+    string token;
+    while ((pos = s.find(delimiter)) != string::npos) {
+        token = s.substr(0, pos);
+        list.push_back(token);
+        s.erase(0, pos + delimiter.length());
+    }
+    return list;
+}
+void commandmode(){
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    int num_of_row = w.ws_row;
+    printf("\033[H\033[J");
+    printf("\033[3J");
+    gotoxy(num_of_row,0);
+    close_keyboard();
+    int c;
+    while(1){
+        printf("\033[H\033[J");
+        printf("\033[3J");
+        gotoxy(num_of_row,0);
+        string str;
+        getline(cin, str);
+        vector<string> command;
+        if(str.size()>1 && str[0] != KEY_ESCAPE){
+            command = split(str, " ");
+            if(command[0] == "copy"){
+                for(int i=1;i<command.size();i++){
+
+                }
+            }
+            else if(command[0] == "move"){
+
+            }
+            else if(command[0] == "rename"){
+
+            }
+            else if(command[0] == "create_file"){
+
+            }
+            else if(command[0] == "create_dir"){
+
+            }
+            else if(command[0] == "delete_file"){
+
+            }
+            else if(command[0] == "delete_dir"){
+
+            }
+            else if(command[0] == "goto"){
+
+            }
+            else if(command[0] == "search"){
+
+            }
+            else if(command[0] == "snapshot"){
+                
+            }
+        }
+        else
+            break;
+    }
+}
 
 int main(void)
 {
@@ -134,12 +205,31 @@ int main(void)
     char path_name[500];
     int index=0;
     strcpy(path_name, root);
-    while (c!='q') {
+     while (c!='q') {
         c = kbget();
         if (c == KEY_ENTER){
-            //getcwd(root,100);
-            //cout<<row<<endl;
-            if(goto_directory(path_name,lst[row].path)==1){
+            if(row==1 && strcmp(path_name,root)){
+                int i=0;
+                lst.clear();
+                for(i=strlen(path_name)-1;i>=0;i--){
+                    if(path_name[i]=='/')
+                        break;
+                }
+                path_name[i]='\0';
+                string path = path_name;
+                stack_prev.push(path);
+                while(!stack_next.empty())
+                    stack_next.pop();
+                lst = list_directory(path_name);
+                //sort(lst.begin(),lst.end(),compare_names);
+                printf("\033[H\033[J");
+                printf("\033[3J");
+                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                    cout<<lst[i].display<<" "<<lst[i].path<<"\n";
+                gotoxy(0,0);
+                row=0;
+            }
+            else if(goto_directory(path_name,lst[row].path)==1){
                 printf("\033[H\033[J");
                 printf("\033[3J");
                 lst.clear();
@@ -147,19 +237,18 @@ int main(void)
                 strcat(path_name,lst[row].path);
                 string path = path_name;
                 stack_prev.push(path);
-                //cout<<stack_prev.top().path<<" "<<endl;
+                while(!stack_next.empty())
+                    stack_next.pop();
                 lst = list_directory(path_name);
-                for(int i=0;i<num_of_row && i<lst.size();i++)
+                //sort(lst.begin(),lst.end(),compare_names);
+                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
-                //cout<<lst[num_of_row-1].display<<" "<<lst[num_of_row-1].path;
-                //cout<<stack_prev.size()<<" "<<stack_next.size()<<endl;
-                //cout<<stack_prev.top();//<<" "<<stack_next.top().path<<endl;
                 gotoxy(0,0);
                 row=0;
             }
         }
         else if (c == KEY_UP){
-            /*if(index>0)*/
+            //if(row>0)
                 row--;
             /*if(row==-1){
                 index--;
@@ -167,59 +256,69 @@ int main(void)
             cursorupward(1);
         } 
         else if(c == KEY_DOWN) {
-            row++;
-            /*if(row==num_of_row){
+            //if(row<num_of_row-1)
+                row++;
+            /*if(row==num_of_row-){
                 index++;
             }*/
             cursordownward(1);
         } 
         else if (c == KEY_RIGHT) {
-            //cout<<"hey"<<endl;
-            //cout<<stack_next.top().path<<endl;
             if(!stack_next.empty()){
                 printf("\033[H\033[J");
                 printf("\033[3J");
                 stack_prev.push(stack_next.top());
                 stack_next.pop();
-                //memset(path_name, 0 , strlen(path_name));
                 strcpy(path_name, stack_prev.top().c_str());
-                //cout<<stack_next.size()<<endl;
-                //cout<<temp.path<<endl;
                 lst.clear();
                 lst = list_directory(path_name);
-                for(int i=0;i<num_of_row && i<lst.size();i++)
+                //sort(lst.begin(),lst.end(),compare_names);
+                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
-                //cout<<stack_prev.top()<<" "<<stack_next.top()<<endl;
-                //cout<<stack_prev.size()<<" "<<stack_next.size()<<endl;
                 gotoxy(0,0);
                 row=0;
             }
         } 
         else if (c == KEY_LEFT) {
-            //cout<<root<<endl;
-            if(stack_prev.size()==1){
-                    while(!stack_next.empty())
-                        stack_next.pop();
-            }
-            else if(stack_prev.size()>1){
-                //cout<<stack_prev.top().path<<endl;
-                //cout<<root<<endl;
+            if(stack_prev.size()>1){
                 printf("\033[H\033[J");
                 printf("\033[3J");
                 stack_next.push(stack_prev.top());
                 stack_prev.pop();
-                //memset(path_name, 0 , strlen(path_name));
                 strcpy(path_name, stack_prev.top().c_str());
-                //cout<<"HEY"<<endl;
                 lst.clear();
                 lst = list_directory(path_name);
-                //cout<<path_name<<endl;
-                for(int i=0;i<num_of_row && i<lst.size();i++)
+                //sort(lst.begin(),lst.end(),compare_names);
+                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
                     cout<<lst[i].display<<" "<<lst[i].path<<"\n";
-                //cout<<stack_next.top().path<<endl;
-                //cout<<stack_next.size()<<endl;
-                //cout<<stack_prev.top()<<" "<<stack_next.top()<<endl;
-                //cout<<stack_prev.size()<<" "<<stack_next.size()<<endl;
+                gotoxy(0,0);
+                row=0;
+            }
+        }
+        else if(c == BACKSPACE){
+            if(strcmp(root,path_name)){
+                printf("\033[H\033[J");
+                printf("\033[3J");
+                lst.clear();
+                int i=0;
+                while(!stack_prev.empty())
+                    stack_prev.pop();
+                while(!stack_next.empty()){
+                    stack_next.pop();
+                }
+                string path = path_name;
+                stack_prev.push(path);
+                for(i=strlen(path_name)-1;i>=0;i--){
+                    if(path_name[i]=='/')
+                        break;
+                }
+                path_name[i]='\0';
+                path = path_name;
+                stack_prev.push(path);
+                lst = list_directory(path_name);
+                //sort(lst.begin(),lst.end(),compare_names);
+                for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                    cout<<lst[i].display<<" "<<lst[i].path<<"\n";
                 gotoxy(0,0);
                 row=0;
             }
@@ -229,10 +328,25 @@ int main(void)
         } 
         if(c==':'){
             cout<<"entered command mode";
+            commandmode();
+            printf("\033[H\033[J");
+            printf("\033[3J");
+            for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                    cout<<lst[i].display<<" "<<lst[i].path<<"\n";
+            gotoxy(0,0);
+            row = 0;
         }
         else if(c == 'h' || c == 'H'){
             memset(path_name,0,sizeof(path_name));
             strcpy(path_name,root);
+            string path = path_name;
+            stack_prev.push(path);
+            lst = list_directory(path_name);
+            //sort(lst.begin(),lst.end(),compare_names);
+            for(int i=0;i<num_of_row-1 && i<lst.size();i++)
+                cout<<lst[i].display<<" "<<lst[i].path<<"\n";
+            gotoxy(0,0);
+            row=0;
         }
         else if(c == 'q' || c == 'Q'){
                 printf("\033[H\033[J");
@@ -240,6 +354,5 @@ int main(void)
                 gotoxy(0,0);
         }
     }
-    printf("\n");
     return 0;
 }
