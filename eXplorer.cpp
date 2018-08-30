@@ -39,28 +39,28 @@ using namespace std;
 #define KEY_RIGHT   0x0108
 #define BACKSPACE      127
 
-static struct termios term, oterm;
+static struct termios newsettings, oldsettings;
 
 static int getch(void);
 static int kbhit(void);
 static int kbesc(void);
 static int kbget(void);
 void close_keyboard(){
-    tcsetattr(0, TCSANOW, &oterm);
+    tcsetattr(0, TCSANOW, &oldsettings);
 }
 
 static int getch(void)
 {
     int c = 0;
 
-    tcgetattr(0, &oterm);
-    memcpy(&term, &oterm, sizeof(term));
-    term.c_lflag &= ~(ICANON | ECHO);
-    term.c_cc[VMIN] = 1;
-    term.c_cc[VTIME] = 0;
-    tcsetattr(0, TCSANOW, &term);
+    tcgetattr(0, &oldsettings);
+    memcpy(&newsettings, &oldsettings, sizeof(newsettings));
+    newsettings.c_lflag &= ~(ICANON | ECHO);
+    newsettings.c_cc[VMIN] = 1;
+    newsettings.c_cc[VTIME] = 0;
+    tcsetattr(0, TCSANOW, &newsettings);
     c = getchar();
-    tcsetattr(0, TCSANOW, &oterm);
+    tcsetattr(0, TCSANOW, &oldsettings);
     return c;
 }
 
@@ -68,14 +68,14 @@ static int kbhit(void)
 {
     int c = 0;
 
-    tcgetattr(0, &oterm);
-    memcpy(&term, &oterm, sizeof(term));
-    term.c_lflag &= ~(ICANON | ECHO);
-    term.c_cc[VMIN] = 0;
-    term.c_cc[VTIME] = 1;
-    tcsetattr(0, TCSANOW, &term);
+    tcgetattr(0, &oldsettings);
+    memcpy(&newsettings, &oldsettings, sizeof(newsettings));
+    newsettings.c_lflag &= ~(ICANON | ECHO);
+    newsettings.c_cc[VMIN] = 0;
+    newsettings.c_cc[VTIME] = 1;
+    tcsetattr(0, TCSANOW, &newsettings);
     c = getchar();
-    tcsetattr(0, TCSANOW, &oterm);
+    tcsetattr(0, TCSANOW, &oldsettings);
     if (c != -1) ungetc(c, stdin);
     return ((c != -1) ? 1 : 0);
 }
