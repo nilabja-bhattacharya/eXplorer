@@ -96,7 +96,7 @@ vector<struct file_and_folder> list_directory(char *path_name_for_directory){
     struct dirent *entry;
     vector<struct file_and_folder> lst;
     if((pointer_to_path_name_for_directory = opendir(path_name_for_directory)) == NULL){
-        fprintf(stderr, "cannot open directory: %s\n", path_name_for_directory);
+        //fprintf(stderr, "cannot open directory: %s\n", path_name_for_directory);
         return lst;
     }
     while((entry=readdir(pointer_to_path_name_for_directory))!=NULL){
