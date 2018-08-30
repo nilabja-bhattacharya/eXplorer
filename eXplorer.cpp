@@ -254,7 +254,7 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
                         move_file(cstrpath,cstrdest);
                     }
                     else{
-                        cout<<command[i]<<endl;
+                        //cout<<command[i]<<endl;
                         string str1 = root;
                         string str2 = complete_dest;
                         if(command[i][0]!='/')
@@ -288,7 +288,7 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
                     complete_dest = root;
                 else
                     complete_dest = dest;
-                cout<<complete_dest<<endl;
+                //cout<<complete_dest<<endl;
                 for(int i=1;i<command.size()-1;i++){
                         string str1 = command[i];
                         strcpy(cstrpath, str1.c_str());
