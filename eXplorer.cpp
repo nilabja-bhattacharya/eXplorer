@@ -363,7 +363,7 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
                 printf("\033[3J");
                 search_file_or_directory(cstrpath,cstrdest,cstrpath);
                 gotoxy(0,0);
-                sleep(10);
+                sleep(5);
             }
             else if(command[0] == "snapshot"){
                 string str1 = root;
@@ -387,7 +387,7 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
                 printf("\033[3J");
                 snapshot_directory(cstrpath,cstrpath);
                 gotoxy(0,0);
-                sleep(10);
+                sleep(5);
                 //stdout = fdopen(1, "w");
             }
         }
@@ -623,11 +623,6 @@ int main(void)
                 printf("\u001b[0m\u001b[7m NORMAL MODE \u001b[0m\n");
                 lst.clear();
                 int i=0;
-                while(!stack_prev.empty())
-                    stack_prev.pop();
-                while(!stack_next.empty()){
-                    stack_next.pop();
-                }
                 string path = path_name;
                 stack_prev.push(path);
                 for(i=strlen(path_name)-1;i>=0;i--){
@@ -697,6 +692,8 @@ int main(void)
             memset(path_name,0,sizeof(path_name));
             strcpy(path_name,root);
             string path = path_name;
+            while(!stack_next.empty())
+                stack_next.pop();
             stack_prev.push(path);
             lst = list_directory(path_name);
             //sort(lst.begin(),lst.end(),compare_names);
