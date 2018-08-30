@@ -1,3 +1,4 @@
+/* Name: Nilabja Bhattacharya Roll: 2018201036 */
 #include <stdio.h>
 #include <string.h>
 #include <termios.h>
@@ -141,7 +142,7 @@ vector<string> split(string phrase, string delimiter){
     list.push_back(s);
     return list;
 }
-string commandmode(vector<struct file_and_folder> lst, char *root, char *root_dir, int start, int end){
+string commandmode(char *root, char *root_dir, int start, int end){
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int num_of_row = w.ws_row;
@@ -150,6 +151,8 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
     printf("\033[3J");
     gotoxy(0,num_of_col/2-5);
     printf("\u001b[0m\u001b[7m COMMAND MODE \u001b[0m\n");
+    vector<struct file_and_folder> lst;
+    lst = list_directory(root);
     for(int i=start;i<end && i<lst.size();i++){
         cout<<lst[i].display<<" ";
         if(strlen(lst[i].display)+strlen(lst[i].path)<num_of_col)
@@ -169,6 +172,7 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
         num_of_row = w.ws_row;
         num_of_col = w.ws_col;
+        lst = list_directory(root);
         printf("\033[H\033[J");
         printf("\033[3J");
         gotoxy(0,num_of_col/2-5);
@@ -319,7 +323,7 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
             }
             else if(command[0] == "delete_file"){
                 for(int i=1;i<command.size();i++){
-                    string str1 = root;
+                    string str1 = root_dir;
                     if(command[i][0]=='~')
                         str1 = str1 + command[i].substr(1);
                     else{
@@ -335,7 +339,7 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
             }
             else if(command[0] == "delete_dir"){
                 for(int i=1;i<command.size();i++){
-                    string str1 = root;
+                    string str1 = root_dir;
                     if(command[i][0]=='~')
                         str1 = str1 + command[i].substr(1);
                     else{
@@ -367,8 +371,10 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
                 strcpy(cstrdest, str2.c_str());
                 printf("\033[H\033[J");
                 printf("\033[3J");
+                gotoxy(0,num_of_col/2 -5);
+                printf("\u001b[0m\u001b[7m NORMAL MODE \u001b[0m\n");
                 search_file_or_directory(cstrpath,cstrdest,cstrpath);
-                gotoxy(0,0);
+                gotoxy(2,0);
                 sleep(5);
             }
             else if(command[0] == "snapshot"){
@@ -395,6 +401,12 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
                 gotoxy(0,0);
                 sleep(5);
                 //stdout = fdopen(1, "w");
+            }
+            else if(command[0]=="quit"){
+                printf("\033[H\033[J");
+                printf("\033[3J");
+                gotoxy(0,0);
+                exit(0);
             }
         }
         else
@@ -445,8 +457,8 @@ int main(void)
         if (c == KEY_ENTER){
             if(row==3 && strcmp(path_name,root)){
                 ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-                int num_of_row = w.ws_row;
-                int num_of_col = w.ws_col;
+                num_of_row = w.ws_row;
+                num_of_col = w.ws_col;
                 int i=0;
                 lst.clear();
                 for(i=strlen(path_name)-1;i>=0;i--){
@@ -479,8 +491,8 @@ int main(void)
             }
             else if(goto_directory(path_name,lst[start+row-2].path)==1){
                 ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-                int num_of_row = w.ws_row;
-                int num_of_col = w.ws_col;
+                num_of_row = w.ws_row;
+                num_of_col = w.ws_col;
                 printf("\033[H\033[J");
                 printf("\033[3J");
                 gotoxy(0,num_of_col/2 -5);
@@ -563,8 +575,8 @@ int main(void)
         else if (c == KEY_RIGHT) {
             if(!stack_next.empty()){
                 ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-                int num_of_row = w.ws_row;
-                int num_of_col = w.ws_col;
+                num_of_row = w.ws_row;
+                num_of_col = w.ws_col;
                 printf("\033[H\033[J");
                 printf("\033[3J");
                 gotoxy(0,num_of_col/2 -5);
@@ -592,8 +604,8 @@ int main(void)
         else if (c == KEY_LEFT) {
             if(stack_prev.size()>1){
                 ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-                int num_of_row = w.ws_row;
-                int num_of_col = w.ws_col;
+                num_of_row = w.ws_row;
+                num_of_col = w.ws_col;
                 printf("\033[H\033[J");
                 printf("\033[3J");
                 gotoxy(0,num_of_col/2 -5);
@@ -621,8 +633,8 @@ int main(void)
         else if(c == BACKSPACE){
             if(strcmp(root,path_name)){
                 ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-                int num_of_row = w.ws_row;
-                int num_of_col = w.ws_col;
+                num_of_row = w.ws_row;
+                num_of_col = w.ws_col;
                 printf("\033[H\033[J");
                 printf("\033[3J");
                 gotoxy(0,num_of_col/2 -5);
@@ -659,10 +671,10 @@ int main(void)
         } 
         if(c==':'){
             ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-            int num_of_row = w.ws_row;
-            int num_of_col = w.ws_col;
+            num_of_row = w.ws_row;
+            num_of_col = w.ws_col;
             //cout<<"entered command mode";
-            string str1 = commandmode(lst,path_name, root, start, end);
+            string str1 = commandmode(path_name, root, start, end);
             cout<<"\033[H\033[J";
             cout<<"\033[3J";
             gotoxy(0,num_of_col/2 -5);
@@ -689,8 +701,8 @@ int main(void)
         }
         else if(c == 'h' || c == 'H'){
             ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-            int num_of_row = w.ws_row;
-            int num_of_col = w.ws_col;
+            num_of_row = w.ws_row;
+            num_of_col = w.ws_col;
             printf("\033[H\033[J");
             printf("\033[3J");
             gotoxy(0,num_of_col/2 -5);

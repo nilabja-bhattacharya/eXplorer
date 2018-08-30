@@ -1,3 +1,4 @@
+/* Name: Nilabja Bhattacharya Roll: 2018201036 */
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +18,6 @@ using namespace std;
 #include "delete_directory.h"
 
 int move_directory(char *path_name_for_directory_to_be_moved, char *path_to_new_directory){
-    if(copy_directory(path_name_for_directory_to_be_moved, path_to_new_directory))
-        return delete_directory(path_name_for_directory_to_be_moved);
-    return 0;
+    copy_directory(path_name_for_directory_to_be_moved, path_to_new_directory);
+    return delete_directory(path_name_for_directory_to_be_moved);
 }

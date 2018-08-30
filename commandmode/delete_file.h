@@ -1,3 +1,4 @@
+/* Name: Nilabja Bhattacharya Roll: 2018201036 */
 #ifndef TERMINALEXPLORER_COMMANDMODE_DELETE_FILE_H
 #define TERMINALEXPLORER_COMMANDMODE_DELETE_FILE_H
 int delete_file(char *path_of_file);

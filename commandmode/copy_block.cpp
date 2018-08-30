@@ -1,7 +1,4 @@
-/*
-This file implements the copy of file in block sizes of 4096 from source file to destination file
-*/
-
+/* Name: Nilabja Bhattacharya Roll: 2018201036 */
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
