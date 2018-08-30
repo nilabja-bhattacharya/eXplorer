@@ -161,7 +161,7 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
         }
     } 
     gotoxy(num_of_row,0);
-    close_keyboard();
+    //close_keyboard();
     int c;
     char cstrpath[1000];
     char cstrdest[1000];
@@ -185,7 +185,13 @@ string commandmode(vector<struct file_and_folder> lst, char *root, char *root_di
         } 
         gotoxy(num_of_row,0);
         string str;
-        getline(cin, str);
+        while((c=kbget())!='\n' && c!=KEY_ESCAPE){
+            str = str + (char)c;
+            putchar(c);
+        }
+        if(c==KEY_ESCAPE)
+            break;
+        //getline(cin, str);
         vector<string> command;
         if(str[0] != KEY_ESCAPE){
             command = split(str, " ");
