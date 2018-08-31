@@ -35,9 +35,9 @@ void file_or_directory_permission(char *path_name_for_directory, char *file_or_f
     lstat(buffer1, &statbuf);
     //printf("%d ",statbuf.st_mode);
     if(S_ISDIR(statbuf.st_mode))
-        strcat(display,"d");
+        strcat(display," d");
     else
-        strcat(display,"-");
+        strcat(display," -");
     if(S_IRUSR&statbuf.st_mode)
          strcat(display,"r");
     else
