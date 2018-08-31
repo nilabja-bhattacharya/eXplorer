@@ -4,7 +4,7 @@ There are two modes to use this application
 1. Normal Mode
 2. Command Mode
 
-### **_NORMAL MODE_**
+##### **_NORMAL MODE_**
 We can use Normal Mode to traverse directory
 Keys to access directory are:
 1. ENTER: Pressing ENTER will take us to the directory and open the file which the cursor is highlighting
@@ -14,7 +14,7 @@ Keys to access directory are:
 5. COLON: Pressing COLON takes us to command mode
 6. Q: Pressing Q exits the application
 
-### **_COMMAND MODE_**
+##### **_COMMAND MODE_**
 Various functions of command mode are:
 1. **_copy_**: copy command will copy the file or directory to the destination directory </br>
          **syntax: copy < filename or directory name - 1 > < filename or directory name - 2 > < destination directory >** </br>
