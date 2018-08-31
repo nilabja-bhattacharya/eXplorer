@@ -190,8 +190,26 @@ string commandmode(char *root, char *root_dir, int start, int end){
         gotoxy(num_of_row,0);
         string str;
         while((c=kbget())!='\n' && c!=KEY_ESCAPE){
-            str = str + (char)c;
-            putchar(c);
+            if(c == BACKSPACE)
+                str = str.substr(0,str.size()-1);
+            else
+                str = str + (char)c;
+            printf("\033[H\033[J");
+            printf("\033[3J");
+            gotoxy(0,num_of_col/2-5);
+            printf("\u001b[0m\u001b[7m COMMAND MODE \u001b[0m\n");
+            for(int i=start;i<end && i<lst.size();i++){
+                cout<<lst[i].display<<" ";
+                if(strlen(lst[i].display)+strlen(lst[i].path)<num_of_col)
+                    cout<<lst[i].path<<"\n";
+                else{
+                    for(int j=0;(strlen(lst[i].display) + j + 1 < num_of_col);j++)
+                        cout<<lst[i].path[j];
+                    cout<<"\n";
+                }
+            } 
+            gotoxy(num_of_row,0);
+            cout<<str;
         }
         if(c==KEY_ESCAPE)
             break;
@@ -640,6 +658,8 @@ int main(void)
                 gotoxy(0,num_of_col/2 -5);
                 printf("\u001b[0m\u001b[7m NORMAL MODE \u001b[0m\n");
                 lst.clear();
+                while(!stack_next.empty())
+                    stack_next.pop();
                 int i=0;
                 string path = path_name;
                 stack_prev.push(path);
