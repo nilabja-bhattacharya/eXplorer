@@ -55,8 +55,8 @@ Various functions of command mode are:
             The application expects the directory path to be relative to the path from which command mode was opened</br>
 
 10. **_snapshot_**: snapshot command takes snapshot of the directory and write it to the given file and it                   works like ls -R shell command, it also displays the result for 5 sec in the application                 window</br>
-              **syntax: snapshot <directory name> <filename>**</br>
+              **syntax: snapshot <directory name> <filename>** </br>
               The application expects the directory path and file path to be relative from which command mode was opened</br>
             
-11. **_quit_**: quit command quits the application
+11. **_quit_**: quit command quits the application </br>
           **syntax: quit**</br>
