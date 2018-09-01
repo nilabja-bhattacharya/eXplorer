@@ -231,9 +231,12 @@ string commandmode(char *root, char *root_dir, int start, int end){
                     if(command[i].find('.')!=string::npos){
                         string str1 = root;
                         string str2 = complete_dest;
-                        if(command[i][0]!='/')
+                        if(command[i][0]!='/'){
                             str1.append("/");
-                        str1 = str1 +  command[i];
+                            str1 = str1 +  command[i];
+                        }
+                        else
+                            str1 = command[i];
                         strcpy(cstrpath, str1.c_str());
                         strcpy(cstrdest, str2.c_str());
                         //cout<<complete_path<<endl;
@@ -243,9 +246,12 @@ string commandmode(char *root, char *root_dir, int start, int end){
                         //cout<<command[i]<<endl;
                         string str1 = root;
                         string str2 = complete_dest;
-                        if(command[i][0]!='/')
+                        if(command[i][0]!='/'){
                             str1.append("/");
-                        str1 = str1 +  command[i];
+                            str1 = str1 +  command[i];
+                        }
+                        else
+                            str1 = command[i];
                         strcpy(cstrpath, str1.c_str());
                         strcpy(cstrdest, str2.c_str());
                         //cout<<complete_path<<endl;
@@ -267,9 +273,12 @@ string commandmode(char *root, char *root_dir, int start, int end){
                     if(command[i].find('.')!=string::npos){
                         string str1 = root;
                         string str2 = complete_dest;
-                        if(command[i][0]!='/')
+                        if(command[i][0]!='/'){
                             str1.append("/");
-                        str1 = str1 +  command[i];
+                            str1 = str1 +  command[i];
+                        }
+                        else
+                            str1 = command[i];
                         strcpy(cstrpath, str1.c_str());
                         strcpy(cstrdest, str2.c_str());
                         //cout<<complete_path<<endl;
@@ -279,9 +288,12 @@ string commandmode(char *root, char *root_dir, int start, int end){
                         //cout<<command[i]<<endl;
                         string str1 = root;
                         string str2 = complete_dest;
-                        if(command[i][0]!='/')
+                        if(command[i][0]!='/'){
                             str1.append("/");
-                        str1 = str1 +  command[i];
+                            str1 = str1 +  command[i];
+                        }
+                        else
+                            str1 = command[i];
                         strcpy(cstrpath, str1.c_str());
                         strcpy(cstrdest, str2.c_str());
                         //cout<<complete_path<<endl;
@@ -290,11 +302,19 @@ string commandmode(char *root, char *root_dir, int start, int end){
                 }
             }
             else if(command[0] == "rename"){
-                string str1 = root;
-                if(command[1][0]!='/')
+                string str1 = root,str2=root;
+                if(command[1][0]!='/'){
                     str1.append("/");
-                string str2 = str1 + command[2]; 
-                str1 = str1 +  command[1];
+                    str1 = str1 +  command[1];
+                }
+                else
+                    str1 = command[1];
+                if(command[2][0]!='/'){
+                    str2.append("/");
+                    str2 = str2 + command[2];
+                }
+                else
+                    str2 = command[2];
                 strcpy(cstrpath, str1.c_str());
                 strcpy(cstrdest, str2.c_str());
                 rename_file(cstrpath,cstrdest);
@@ -345,9 +365,13 @@ string commandmode(char *root, char *root_dir, int start, int end){
                     if(command[i][0]=='~')
                         str1 = str1 + command[i].substr(1);
                     else{
-                        if(command[i][0]!='/')
+                        if(command[i][0]!='/'){
+                            str1 = root;
                             str1.append("/");
-                        str1 = str1 + command[i];
+                            str1 = str1 + command[i];
+                        }
+                        else
+                            str1 = command[i];
                     }
                     strcpy(cstrpath, str1.c_str());
                     //cout<<complete_dest<<endl;
@@ -361,9 +385,13 @@ string commandmode(char *root, char *root_dir, int start, int end){
                     if(command[i][0]=='~')
                         str1 = str1 + command[i].substr(1);
                     else{
-                        if(command[i][0]!='/')
+                        if(command[i][0]!='/'){
+                            str1 = root;
                             str1.append("/");
-                        str1 = str1 + command[i];
+                            str1 = str1 + command[i];
+                        }
+                        else
+                            str1 = command[i];
                     }
                     strcpy(cstrpath, str1.c_str());
                     //cout<<complete_dest<<endl;
@@ -372,13 +400,21 @@ string commandmode(char *root, char *root_dir, int start, int end){
                 }
             }
             else if(command[0] == "goto"){
+                string str1;
                 if(command[1]=="/"){
                     return root_dir;
                 }
-                string str1 = root_dir;
-                if(command[1][0]!='/')
+                if(command[1][0]=='~'){
+                    str1 = root_dir;
+                    str1 = str1 + command[1].substr(1);
+                }
+                else if(command[1][0]!='/'){
+                    str1 = root;
                     str1.append("/");
-                str1 = str1 + command[1];
+                    str1 = str1 + command[1];
+                }
+                else
+                    str1 = command[1];
                 strcpy(cstrpath, command[1].c_str());
                 return str1;
             }
@@ -401,12 +437,19 @@ string commandmode(char *root, char *root_dir, int start, int end){
             }
             else if(command[0] == "snapshot"){
                 string str1 = root;
-                string str2;
-                if(command[1][0]!='/')
+                string str2 = root;
+                if(command[1][0]!='/'){
                     str1.append("/");
-                str2 = str1;
-                str1 = str1 +  command[1];
-                str2 = str2 + command[2];
+                    str1 = str1 +  command[1];
+                }
+                else
+                    str1 = command[1];
+                if(command[2][0]!='/'){
+                    str2.append("/");
+                    str2 = str2 +  command[2];
+                }
+                else
+                    str2 = command[2];
                 strcpy(cstrpath, str1.c_str());
                 strcpy(cstrdest, str2.c_str());
                 freopen(cstrdest,"w", stdout);
