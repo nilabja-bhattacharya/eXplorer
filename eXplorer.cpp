@@ -393,7 +393,11 @@ string commandmode(char *root, char *root_dir, int start, int end){
                 printf("\u001b[0m\u001b[7m NORMAL MODE \u001b[0m\n");
                 search_file_or_directory(cstrpath,cstrdest,cstrpath);
                 gotoxy(2,0);
-                sleep(5);
+                while(1){
+                    c=kbget();
+                    if(c == BACKSPACE)
+                        return root;
+                }
             }
             else if(command[0] == "snapshot"){
                 string str1 = root;
@@ -416,7 +420,7 @@ string commandmode(char *root, char *root_dir, int start, int end){
                 printf("\033[H\033[J");
                 printf("\033[3J");
                 snapshot_directory(cstrpath,cstrpath);
-                gotoxy(0,0);
+                gotoxy(2,0);
                 sleep(5);
                 //stdout = fdopen(1, "w");
             }
