@@ -8,7 +8,7 @@ There are two modes to use this application
 We can use Normal Mode to traverse directory
 
 #### Keys to access directory are:
-- **_ENTER_**: ENTER can be used to enter directory or open files and application
+- **_ENTER_**: Pressing ENTER can be used to enter directory or open files and application
 - **_BACKSPACE_**: Pressing BACKSPACE will take us to the parent directory of the current directory
 - **_LEFT ARROW_**: Pressing LEFT ARROW will take us to previous directory that we were in 
 - **_RIGHT ARROW_**: Pressing RIGHT ARROW will take us to the directory that we were in before pressing the LEFT ARROW
