@@ -18,13 +18,13 @@ Keys to access directory are:
 Various functions of command mode are:
 1. **_copy_**: copy command will copy the file or directory to the destination directory </br>
          **syntax: copy < filename or directory name - 1 > < filename or directory name - 2 > < destination directory >** </br>
-        where filename must be relative to path from which command mode was opened </br>
-        If destination directory path is relative to path from which command mode was open it must be followed by a ~, i.e., ~/C/D otherwise the application expects absolute path </br>
+        where filename must be relative to path from which command mode was opened, ie, if the path isn't preceded by '/' or '~' </br>
+        If destination directory path is relative to path from which application was opened it must be followed by a ~ or /, i.e., ~/C/D or /C/D otherwise the application expects absolute path </br>
 
 2. **_move_**: move command will move the file or directory to the destination directory </br>
          **syntax: move < filename or directory name - 1 > < filename or directory name - 2 > < destination directory >** </br>
-        where filename must be relative to path from which command mode was opened </br>
-        If destination directory path is relative to path from which command mode was opened it must be followed by a ~, i.e., ~/C/D otherwise the application expects absolute path </br>
+        where filename must be relative to path from which command mode was opened,ie, if the path isn't preceded by '/' or '~' </br>
+        If destination directory path is relative to path from which application was opened it must be followed by a ~ or /, i.e., ~/C/D or /C/D otherwise the application expects absolute path </br>
         
 3. **_rename_**: rename command will rename the file and folder from old name to new name
            **syntax: rename < old name > < new name >** </br>
