@@ -342,8 +342,13 @@ string commandmode(char *root, char *root_dir, int start, int end){
                     //cout<<complete_dest;
                 else if(dest==".")
                     complete_dest = root;
-                else
+                else if(dest[0]=='/')
                     complete_dest = root_dir + dest;
+                else{
+                    complete_dest = root;
+                    complete_dest.append("/");
+                    complete_dest = complete_dest + dest;
+                }
                 //cout<<complete_dest<<endl;
                 for(int i=1;i<command.size()-1;i++){
                         string str1 = command[i];
@@ -358,12 +363,17 @@ string commandmode(char *root, char *root_dir, int start, int end){
                 string dest = command[command.size()-1];
                 //cout<<dest[0]<<endl;;
                 if(dest[0]=='~')
-                    complete_dest = root + dest.substr(1);
+                    complete_dest = root_dir + dest.substr(1);
                     //cout<<complete_dest;
                 else if(dest==".")
                     complete_dest = root;
-                else
+                else if(dest[0]=='/')
                     complete_dest = root_dir + dest;
+                else{
+                    complete_dest = root;
+                    complete_dest.append("/");
+                    complete_dest = complete_dest + dest;
+                }
                 for(int i=1;i<command.size()-1;i++){
                         string str1 = command[i];
                         strcpy(cstrpath, str1.c_str());
