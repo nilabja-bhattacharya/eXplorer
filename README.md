@@ -8,12 +8,12 @@ There are two modes to use this application
 We can use Normal Mode to traverse directory
 
 #### Keys to access directory are:
-- ENTER: ENTER can be used to enter directory or open files and application
-- BACKSPACE: Pressing BACKSPACE will take us to the parent directory of the current directory
-- LEFT ARROW: Pressing LEFT ARROW will take us to previous directory that we were in 
-- RIGHT ARROW: Pressing RIGHT ARROW will take us to the directory that we were in before pressing the LEFT ARROW
-- COLON: Pressing COLON takes us to command mode
-- Q: Pressing Q exits the application
+- **_ENTER_**: ENTER can be used to enter directory or open files and application
+- **_BACKSPACE_**: Pressing BACKSPACE will take us to the parent directory of the current directory
+- **_LEFT ARROW_**: Pressing LEFT ARROW will take us to previous directory that we were in 
+- **_RIGHT ARROW_**: Pressing RIGHT ARROW will take us to the directory that we were in before pressing the LEFT ARROW
+- **_COLON_**: Pressing COLON takes us to command mode
+- **_Q_**: Pressing Q exits the application
 
 
 
@@ -45,13 +45,13 @@ We can use Normal Mode to traverse directory
 
             syntax: create_file < filename 1 > < filename 2 > < destination directory >
             
-            The application expects the destination directory name provided is relative to root directory of application, if it is of form, ~/C/D or /C/D, or it is the current directory if destination directory is provided as '.' or it is relative to current diectory if it is of form C/D
+            The application expects the destination directory name provided is relative to root directory of application, if it is of form, ~/C/D or /C/D, or it is the current directory if destination directory is provided as '.' or it is relative to current directory if it is of form C/D
 
 - **_create_dir_**: create_dir command creates directory in the destination directory
 
             syntax: create_file < directory name 1 > < directory name 2 > < destination directory >
             
-            The application expects the destination directory name provided is relative to root directory of application, if it is of form, ~/C/D or /C/D, or it is the current directory if destination directory is provided as '.' or it is relative to current diectory if it is of form C/D
+            The application expects the destination directory name provided is relative to root directory of application, if it is of form, ~/C/D or /C/D, or it is the current directory if destination directory is provided as '.' or it is relative to current directory if it is of form C/D
 
 - **_delete_file_**: delete_file command deletes the file for which path was provided
 
