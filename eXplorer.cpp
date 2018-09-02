@@ -222,11 +222,18 @@ string commandmode(char *root, char *root_dir, int start, int end){
                 string dest = command[command.size()-1];
                 //cout<<dest[0]<<endl;;
                 if(dest[0]=='~'){
-                    complete_dest = root + dest.substr(1);
+                    complete_dest = root_dir + dest.substr(1);
                     //cout<<complete_dest;
                 }
-                else
-                    complete_dest = root_dir + dest;
+                else{
+                    if(dest[0]!='/'){
+                        complete_dest = root;
+                        complete_dest.append("/");
+                        complete_dest = complete_dest + dest;
+                    }
+                    else
+                        complete_dest = root_dir + dest;
+                }
                 for(int i=1;i<command.size()-1;i++){
                     if(command[i].find('.')!=string::npos){
                         string str1 = root;
@@ -262,13 +269,20 @@ string commandmode(char *root, char *root_dir, int start, int end){
             else if(command[0] == "move"){
                 string complete_dest;
                 string dest = command[command.size()-1];
-                //cout<<dest[0]<<endl;;
+                //cout<<dest[0]<<endl;
                 if(dest[0]=='~'){
-                    complete_dest = root + dest.substr(1);
+                    complete_dest = root_dir + dest.substr(1);
                     //cout<<complete_dest;
                 }
-                else
-                    complete_dest = dest;
+                else{
+                    if(dest[0]!='/'){
+                        complete_dest = root;
+                        complete_dest.append("/");
+                        complete_dest = complete_dest + dest;
+                    }
+                    else
+                        complete_dest = root_dir + dest;
+                }
                 for(int i=1;i<command.size()-1;i++){
                     if(command[i].find('.')!=string::npos){
                         string str1 = root;
@@ -482,6 +496,7 @@ string commandmode(char *root, char *root_dir, int start, int end){
 
 int main(void)
 {
+    freopen("log.txt","w+",stderr);
     int c;
     printf("\033[H\033[J");
     printf("\033[3J");
@@ -803,5 +818,6 @@ int main(void)
                 gotoxy(0,0);
         }
     }
+    fclose(stderr);
     return 0;
 }
